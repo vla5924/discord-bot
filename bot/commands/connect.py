@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 
-from . import utils, phrases
-from .manager import Manager
+from .. import utils, phrases
+from ..manager import Manager
 
 
 class Connect(commands.Cog):
