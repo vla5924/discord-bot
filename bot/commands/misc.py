@@ -6,6 +6,6 @@ class Misc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='echo')
+    @commands.command(name='echo', aliases=['e'])
     async def command_echo(self, ctx, arg):
         await ctx.send(arg)

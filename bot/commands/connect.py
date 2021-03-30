@@ -9,7 +9,7 @@ class Connect(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='connect')
+    @commands.command(name='connect', aliases=['c'])
     async def command_connect(self, ctx):
         if Manager.is_registered(ctx.guild):
             await ctx.send(phrases.ALREADY_CONNECTED)
@@ -22,17 +22,17 @@ class Connect(commands.Cog):
         if current_guild is None:
             await ctx.send(phrases.NO_GUILD)
             return
-        client = await voice.channel.connect()
-        Manager.register_client(ctx.guild, client)
-        await ctx.send("Connected to {}".format(voice.channel.name))
+        client = await voice.channel.connect(reconnect=True, timeout=None)
+        Manager.register(self.bot, ctx.guild, client)
+        await ctx.send("{}: {}".format(phrases.CONNECTED_TO_VOICE_CHANNEL, voice.channel.name))
 
-    @commands.command(name='disconnect')
+    @commands.command(name='disconnect', aliases=['d'])
     async def command_disconnect(self, ctx):
         guild = ctx.guild
         if Manager.is_registered(guild):
-            client = Manager.get_client(guild)
-            await client.disconnect()
-            Manager.unregister_client(guild)
-            await ctx.send("Disconnected")
+            streamer = Manager.get(guild)
+            await streamer.client.disconnect()
+            Manager.unregister(guild)
+            await ctx.send(phrases.DISCONNECTED)
         else:
             await ctx.send(phrases.ALREADY_DISCONNECTED)

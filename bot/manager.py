@@ -1,21 +1,24 @@
+from .streamer import Streamer
+
+
 class Manager:
-    clients = {}
+    streamers = {}
 
     def __init__(self):
         raise NotImplementedError("Manager must be a singleton")
 
     @classmethod
-    def register_client(cls, guild, client):
-        cls.clients[guild] = client
+    def register(cls, bot, guild, client):
+        cls.streamers[guild] = Streamer(bot, client)
 
     @classmethod
-    def unregister_client(cls, guild):
-        del cls.clients[guild]
+    def unregister(cls, guild):
+        del cls.streamers[guild]
 
     @classmethod
-    def is_registered(cls, guild):
-        return guild in cls.clients
+    def is_registered(cls, guild) -> bool:
+        return guild in cls.streamers
 
     @classmethod
-    def get_client(cls, guild):
-        return cls.clients[guild] if cls.is_registered(guild) else None
+    def get(cls, guild) -> Streamer:
+        return cls.streamers[guild] if cls.is_registered(guild) else None
